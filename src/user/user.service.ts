@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, getRepository, Like, Repository } from 'typeorm';
+import { DeleteResult, ILike, Like, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserInput } from './user.input';
 import { v1 as uuid } from 'uuid';
@@ -28,7 +28,30 @@ export class UserService {
     return this.userRepository.findOne({ email, password });
   }
 
-  async findOne(condition: any): Promise<User> {
+  async findSome(condition: string): Promise<User[]>{
+    let usersByUsername =await this.userRepository.find({
+      where: {
+        username: new RegExp(`^${condition}`),
+    }
+      });
+
+      // Ab hier hab ich rumprobiert: hab auf die Schnelle keinen Or Befehl gefunden und es dann so versucht.
+      let usersByEmail =await this.userRepository.find({
+        where: {
+          email: new RegExp(`^${condition}`),
+      }
+        });
+        console.log("Suche");
+        
+        if(usersByUsername.length > usersByEmail.length) return usersByUsername;
+        else return usersByEmail;
+      }
+
+  async findOne(condition: {id?:string, email?: string, username?: string}): Promise<User> {
+    console.log(condition);
+    
+   
+    
     return this.userRepository.findOne(condition);
   }
 

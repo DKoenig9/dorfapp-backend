@@ -26,6 +26,16 @@ export class WorkNeedService {
     return this.workNeedRepository.delete({ id });
   }
 
+  async editWorkNeed(
+    id: string,
+    job: string,
+    description: string,
+  ): Promise<WorkNeed>{
+    await this.workNeedRepository.update({id}, {job, description});
+
+    return this.workNeedRepository.findOne({id});
+  }
+
   createWorkNeed(createWorkNeedInput: CreateWorkNeedInput): Promise<WorkNeed> {
     const { username, job, description, phoneNumber } = createWorkNeedInput;
     console.log("Username: " +username);

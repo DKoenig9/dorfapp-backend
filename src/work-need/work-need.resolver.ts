@@ -28,6 +28,18 @@ export class WorkNeedResolver {
     return item;
   }
 
+  @Mutation(returns => WorkNeedType)
+  async editWorkNeed(
+    @Args('id') id: string,
+    @Args('job') job: string,
+    @Args('description') description: string,
+  ){
+    await this.workNeedService.editWorkNeed(id, job, description);
+    console.log("return");
+    
+    return this.workNeedService.getWorkNeed(id)
+  }
+
   @Mutation((returns) => WorkNeedType)
   createWorkNeed(
     @Args('createWorkNeedInput') createWorkNeedInput: CreateWorkNeedInput,

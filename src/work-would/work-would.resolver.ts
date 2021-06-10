@@ -27,6 +27,16 @@ export class WorkWouldResolver {
     return item;
   }
 
+  @Mutation(returns => WorkWouldType)
+  async editWorkWould(
+    @Args('id')id:string,
+    @Args('job')job: string,
+    @Args('description') description: string,
+  ){
+    await this.workWouldService.editWorkWould(id, job, description);
+    return this.workWouldService.getWorkWould(id);
+  }
+
   @Mutation((returns) => WorkWouldType)
   createWorkWould(
     @Args('createWorkWouldInput') createWorkWouldInput: CreateWorkWouldInput,

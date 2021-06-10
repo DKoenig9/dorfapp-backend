@@ -32,9 +32,9 @@ export class UserResolver {
     let user = await this.userService.findSome(text);
     // if (!user) {
     //   user = await this.userService.findSome(text);
-      if (!user) {
-        throw new BadRequestException('Keinen Nutzer gefunden');
-      } else return user;
+    if (!user) {
+      throw new BadRequestException('Keinen Nutzer gefunden');
+    } else return user;
     // } else return user;
   }
 
@@ -83,12 +83,20 @@ export class UserResolver {
     @Args('userRole') userRole: string,
   ) {
     let hashedPassword: string;
-    if (password) {
-     hashedPassword  = await bcrypt.hash(password, this.saltSecret);
-    }else {
+    console.log('Passwort im Backend: ', password);
+
+    if (password === 'null') {
+      console.log('nicht geändert');
       const user = await this.userService.getUserById(id);
       hashedPassword = user.password;
+    } else {
+      console.log('geändert');
+      console.log(password);
+      hashedPassword = await bcrypt.hash(password, this.saltSecret);
     }
+
+    console.log('Was ist hier draus geworden? ', hashedPassword);
+
     await this.userService.editUser(
       id,
       username,

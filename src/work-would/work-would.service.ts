@@ -25,13 +25,22 @@ export class WorkWouldService {
     return this.workWouldRepository.delete({ id });
   }
 
+  async editWorkWould(
+    id: string,
+    job: string,
+    description: string,
+  ): Promise<void> {
+    await this.workWouldRepository.update({ id }, { job, description });
+  }
+
   async createWorkWould(
     createWorkWouldInput: CreateWorkWouldInput,
   ): Promise<WorkWould> {
-    const { username, job, description, phoneNumber } = createWorkWouldInput;
+    const { username, userId , job, description, phoneNumber } = createWorkWouldInput;
     const workWould = this.workWouldRepository.create({
       id: uuid(),
       username,
+      userId,
       job,
       description,
       phoneNumber,

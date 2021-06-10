@@ -9,6 +9,10 @@ export class CreateWorkNeedInput {
 
   @Field()
   @MinLength(1)
+  userId:string;
+
+  @Field()
+  @MinLength(1)
   job: string;
 
   @Field()

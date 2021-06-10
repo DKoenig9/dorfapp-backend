@@ -12,6 +12,9 @@ export class WorkWould {
   username: string;
 
   @Column()
+  userId: string;
+
+  @Column()
   job: string;
 
   @Column()

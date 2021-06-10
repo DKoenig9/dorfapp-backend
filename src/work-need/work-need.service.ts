@@ -30,24 +30,26 @@ export class WorkNeedService {
     id: string,
     job: string,
     description: string,
-  ): Promise<WorkNeed>{
-    await this.workNeedRepository.update({id}, {job, description});
+  ): Promise<WorkNeed> {
+    await this.workNeedRepository.update({ id }, { job, description });
 
-    return this.workNeedRepository.findOne({id});
+    return this.workNeedRepository.findOne({ id });
   }
 
   createWorkNeed(createWorkNeedInput: CreateWorkNeedInput): Promise<WorkNeed> {
-    const { username, job, description, phoneNumber } = createWorkNeedInput;
-    console.log("Username: " +username);
-    
+    const { username, userId, job, description, phoneNumber } =
+      createWorkNeedInput;
+    console.log('Username: ' + username);
+
     const workNeed = this.workNeedRepository.create({
       id: uuid(),
       username,
+      userId,
       job,
       description,
       phoneNumber,
     });
-    console.log("wadawd ",workNeed);
+    console.log('wadawd ', workNeed);
 
     return this.workNeedRepository.save(workNeed);
   }

@@ -9,6 +9,9 @@ export class WorkWouldType {
   username: string;
 
   @Field()
+  userId: string;
+
+  @Field()
   job: string;
 
   @Field()

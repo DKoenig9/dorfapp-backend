@@ -14,7 +14,6 @@ export class WorkNeedResolver {
 
   @Query((returns) => [WorkNeedType])
   workNeeds() {
-    console.log('Alle');
     return this.workNeedService.getWorkNeeds();
   }
 
@@ -35,7 +34,6 @@ export class WorkNeedResolver {
     @Args('description') description: string,
   ){
     await this.workNeedService.editWorkNeed(id, job, description);
-    console.log("return");
     
     return this.workNeedService.getWorkNeed(id)
   }
@@ -44,7 +42,6 @@ export class WorkNeedResolver {
   createWorkNeed(
     @Args('createWorkNeedInput') createWorkNeedInput: CreateWorkNeedInput,
   ) {
-    console.log('Hier');
 
     return this.workNeedService.createWorkNeed(createWorkNeedInput);
   }

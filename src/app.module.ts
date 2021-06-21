@@ -9,6 +9,10 @@ import { UserModule } from './user/user.module';
 import { User } from './user/user.entity';
 import { BoardItemModule } from './board-item/board-item.module';
 import { BoardItem } from './board-item/board-item.entity';
+import { Chat } from './chat/chat.entity';
+import { ChatModule } from './chat/chat.module';
+import { EventModule } from './event/event.module';
+import { Event } from './event/event.entity';
 
 @Module({
   imports: [
@@ -17,7 +21,7 @@ import { BoardItem } from './board-item/board-item.entity';
       url: 'mongodb://localhost/dorfapp',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [WorkNeed, WorkWould, User, BoardItem],
+      entities: [WorkNeed, WorkWould, User, BoardItem, Chat, Event],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
@@ -26,6 +30,8 @@ import { BoardItem } from './board-item/board-item.entity';
     WorkWouldModule,
     UserModule,
     BoardItemModule,
+    ChatModule,
+    EventModule,
   ],
 })
 export class AppModule {}

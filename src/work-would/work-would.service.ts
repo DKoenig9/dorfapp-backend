@@ -17,6 +17,35 @@ export class WorkWouldService {
     return this.workWouldRepository.findOne({ id });
   }
 
+  async findSome(condition: string): Promise<WorkWould[]> {
+    const workWouldsByUsername = await this.workWouldRepository.find({
+      where: {
+        username: new RegExp(`^${condition}`),
+      },
+    });
+
+    const workWouldsByJob = await this.workWouldRepository.find({
+      where: {
+        job: new RegExp(`^${condition}`),
+      },
+    });
+
+    const workWouldsByDescription = await this.workWouldRepository.find({
+      where: {
+        description: new RegExp(`^${condition}`),
+      },
+    });
+
+    const max = Math.max(
+      workWouldsByUsername.length,
+      workWouldsByJob.length,
+      workWouldsByDescription.length,
+    );
+    if (max === workWouldsByUsername.length) return workWouldsByUsername;
+    if (max === workWouldsByJob.length) return workWouldsByJob;
+    if (max === workWouldsByDescription.length) return workWouldsByDescription;
+  }
+
   getWorkWoulds(): Promise<WorkWould[]> {
     return this.workWouldRepository.find();
   }
@@ -36,7 +65,8 @@ export class WorkWouldService {
   async createWorkWould(
     createWorkWouldInput: CreateWorkWouldInput,
   ): Promise<WorkWould> {
-    const { username, userId , job, description, phoneNumber } = createWorkWouldInput;
+    const { username, userId, job, description, phoneNumber } =
+      createWorkWouldInput;
     const workWould = this.workWouldRepository.create({
       id: uuid(),
       username,
@@ -44,6 +74,7 @@ export class WorkWouldService {
       job,
       description,
       phoneNumber,
+      createdAt: new Date(Date.now()),
     });
     console.log('would', workWould);
 

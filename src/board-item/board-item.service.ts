@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { BoardItem } from './board-item.entity';
 import { CreateBoardItemInput } from './board-item.input';
 import { v1 as uuid } from 'uuid';
@@ -12,8 +12,12 @@ export class BoardItemService {
     private boardItemRepository: Repository<BoardItem>,
   ) {}
 
-  getBoardItems(): Promise<BoardItem[]>{
+  getBoardItems(): Promise<BoardItem[]> {
     return this.boardItemRepository.find();
+  }
+
+  getBoardItemById(id: string): Promise<BoardItem> {
+    return this.boardItemRepository.findOne({ id });
   }
 
   createBoardItem(
@@ -29,5 +33,23 @@ export class BoardItemService {
     });
 
     return this.boardItemRepository.save(boardItem);
+  }
+
+  deleteBoardItemById(id: string): Promise<DeleteResult> {
+    return this.boardItemRepository.delete({ id });
+  }
+
+  async updateBoardItemById(
+    id: string,
+    title: string,
+    teaser: string,
+    imgUrl: string,
+    link: string,
+  ): Promise<BoardItem> {
+    await this.boardItemRepository.update(
+      { id },
+      { title, teaser, imgUrl, link },
+    );
+    return this.boardItemRepository.findOne({ id });
   }
 }

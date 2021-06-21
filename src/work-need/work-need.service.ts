@@ -16,6 +16,35 @@ export class WorkNeedService {
     return this.workNeedRepository.findOne({ id });
   }
 
+  async findSome(condition: string): Promise<WorkNeed[]> {
+    const workNeedsByUsername = await this.workNeedRepository.find({
+      where: {
+        username: new RegExp(`^${condition}`),
+      },
+    });
+
+    const workNeedsByJob = await this.workNeedRepository.find({
+      where: {
+        job: new RegExp(`^${condition}`),
+      },
+    });
+
+    const workNeedsByDescription = await this.workNeedRepository.find({
+      where: {
+        description: new RegExp(`^${condition}`),
+      },
+    });
+
+    const max = Math.max(
+      workNeedsByUsername.length,
+      workNeedsByJob.length,
+      workNeedsByDescription.length,
+    );
+    if (max === workNeedsByUsername.length) return workNeedsByUsername;
+    if (max === workNeedsByJob.length) return workNeedsByJob;
+    if (max === workNeedsByDescription.length) return workNeedsByDescription;
+  }
+
   getWorkNeeds(): Promise<WorkNeed[]> {
     return this.workNeedRepository.find();
   }
@@ -48,6 +77,7 @@ export class WorkNeedService {
       job,
       description,
       phoneNumber,
+      createdAt: new Date(Date.now()),
     });
     console.log('wadawd ', workNeed);
 

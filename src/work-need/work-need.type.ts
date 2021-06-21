@@ -19,4 +19,7 @@ export class WorkNeedType {
 
   @Field()
   phoneNumber: string;
+
+  @Field()
+  createdAt: Date;
 }

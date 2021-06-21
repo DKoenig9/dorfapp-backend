@@ -22,4 +22,7 @@ export class WorkNeed {
 
   @Column()
   phoneNumber: string;
+
+  @Column()
+  createdAt: Date;
 }

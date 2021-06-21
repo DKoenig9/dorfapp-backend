@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateWorkNeedInput } from './work-need.input';
 import { WorkNeedService } from './work-need.service';
@@ -13,8 +14,38 @@ export class WorkNeedResolver {
   }
 
   @Query((returns) => [WorkNeedType])
-  workNeeds() {
-    return this.workNeedService.getWorkNeeds();
+  async workNeedsBySomething(@Args('value') value: string) {
+    const workNeeds = await this.workNeedService.findSome(value);
+    console.log('ItemsWN: ', workNeeds);
+
+    if (workNeeds.length === 0) {
+      throw new BadRequestException(
+        'Keine Beiträge in "Ich brauche Hilfe" gefunden',
+      );
+    } else return workNeeds;
+  }
+
+  @Query((returns) => [WorkNeedType])
+  async workNeeds() {
+    let deleted = false;
+    const workNeeds = await this.workNeedService.getWorkNeeds();
+
+    //Array wird durchsucht und alle items, die ihr destroyDate erreicht haben, werden gelöscht
+    workNeeds.forEach((element) => {
+      let destroyDate = new Date();
+      destroyDate.setDate(element.createdAt.getDate() + 7);
+      console.log('Destroy ', destroyDate.getTime());
+      console.log('Now ', Date.now());
+      if (destroyDate.getTime() < Date.now()) {
+        console.log('gelöscht');
+        this.workNeedService.deleteWorkNeed(element.id);
+        deleted = true;
+      }
+    });
+    if (deleted) {
+      return await this.workNeedService.getWorkNeeds();
+    }
+    return workNeeds;
   }
 
   @Mutation((returns) => WorkNeedType)
@@ -27,22 +58,21 @@ export class WorkNeedResolver {
     return item;
   }
 
-  @Mutation(returns => WorkNeedType)
+  @Mutation((returns) => WorkNeedType)
   async editWorkNeed(
     @Args('id') id: string,
     @Args('job') job: string,
     @Args('description') description: string,
-  ){
+  ) {
     await this.workNeedService.editWorkNeed(id, job, description);
-    
-    return this.workNeedService.getWorkNeed(id)
+
+    return this.workNeedService.getWorkNeed(id);
   }
 
   @Mutation((returns) => WorkNeedType)
   createWorkNeed(
     @Args('createWorkNeedInput') createWorkNeedInput: CreateWorkNeedInput,
   ) {
-
     return this.workNeedService.createWorkNeed(createWorkNeedInput);
   }
 }

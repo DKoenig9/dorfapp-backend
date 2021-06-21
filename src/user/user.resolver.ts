@@ -29,13 +29,10 @@ export class UserResolver {
 
   @Query((returns) => [UserType])
   async usersBySomething(@Args('text') text: string) {
-    let user = await this.userService.findSome(text);
-    // if (!user) {
-    //   user = await this.userService.findSome(text);
-    if (!user) {
+    let users = await this.userService.findSome(text);
+    if (users.length === 0) {
       throw new BadRequestException('Keinen Nutzer gefunden');
-    } else return user;
-    // } else return user;
+    } else return users;
   }
 
   @Query((returns) => UserType)

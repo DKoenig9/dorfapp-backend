@@ -1,7 +1,7 @@
 import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class WorkWould {
+export class Event {
   @ObjectIdColumn()
   _id: string;
 
@@ -9,22 +9,14 @@ export class WorkWould {
   id: string;
 
   @Column()
-  username: string;
+  title: string;
 
   @Column()
-  userId: string;
+  startDate: string;
 
   @Column()
-  job: string;
-
-  @Column()
-  description: string;
-
-  @Column()
-  phoneNumber: string;
-
-  @Column()
-  createdAt: Date;
-
+  endDate: string;
   
+  @Column()
+  allDay: boolean;
 }
